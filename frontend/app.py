@@ -144,7 +144,7 @@ RESPOND ONLY with valid JSON in this exact format, no other text:
 
     try:
         message = client.chat.completions.create(
-            model="mixtral-8b-7b-32768",
+            model="llama-3.1-70b-versatile",
             max_tokens=2000,
             messages=[
                 {"role": "user", "content": prompt}
