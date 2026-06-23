@@ -5,39 +5,39 @@ import json
 import os
 from dotenv import load_dotenv
 
-#  LOAD ENVIRONMENT VARIABLES
+# ✅ LOAD ENVIRONMENT VARIABLES
 load_dotenv()
 
-#  GROQ API SETUP
+# ✅ GROQ API SETUP
 try:
     from groq import Groq
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
     
     if not GROQ_API_KEY:
-        st.error(" GROQ_API_KEY not found! Add it to Streamlit Secrets.")
+        st.error("❌ GROQ_API_KEY not found! Add it to Streamlit Secrets.")
         st.stop()
     
     client = Groq(api_key=GROQ_API_KEY)
 except ImportError:
-    st.error(" groq module not installed. Add to requirements.txt: groq")
+    st.error("❌ groq module not installed. Add to requirements.txt: groq")
     st.stop()
 except Exception as e:
-    st.error(f" Groq initialization error: {str(e)}")
+    st.error(f"❌ Groq initialization error: {str(e)}")
     st.stop()
 
-#  SLACK WEBHOOK (OPTIONAL)
+# ✅ SLACK WEBHOOK (OPTIONAL)
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 
-#  STREAMLIT PAGE CONFIG
+# ✅ STREAMLIT PAGE CONFIG
 st.set_page_config(
-    page_title="AI Business Agent",
+    page_title="MCP AP Agent",
     page_icon="🤖",
     layout="wide"
 )
 
-st.title("AI Business Agent")
+st.title("🤖 MCP Production Business Agent")
 
-#  INITIALIZE SESSION STATE (In-memory database)
+# ✅ INITIALIZE SESSION STATE (In-memory database)
 if "invoices" not in st.session_state:
     st.session_state.invoices = [
         {
@@ -102,7 +102,7 @@ if "workflow_result" not in st.session_state:
     st.session_state.workflow_result = {}
 
 # ──────────────────────────────────────────────────────────────
-#  GROQ AI AGENT FUNCTIONS
+# ✅ GROQ AI AGENT FUNCTIONS
 # ──────────────────────────────────────────────────────────────
 
 def call_groq_agent(command: str, invoices: list) -> dict:
@@ -143,7 +143,7 @@ RESPOND ONLY with valid JSON in this exact format, no other text:
 }}"""
 
     try:
-        message = client.messages.create(
+        message = client.chat.completions.create(
             model="mixtral-8b-7b-32768",
             max_tokens=2000,
             messages=[
@@ -151,7 +151,7 @@ RESPOND ONLY with valid JSON in this exact format, no other text:
             ]
         )
         
-        response_text = message.content[0].text
+        response_text = message.choices[0].message.content
         
         # Try to parse JSON
         try:
@@ -172,7 +172,7 @@ RESPOND ONLY with valid JSON in this exact format, no other text:
     
     except Exception as e:
         error_msg = str(e)
-        st.error(f" Groq API Error: {error_msg}")
+        st.error(f"❌ Groq API Error: {error_msg}")
         return {"error": error_msg}
 
 def send_slack_notification(message: str) -> bool:
@@ -212,7 +212,7 @@ def process_workflow(command: str):
     
     # Handle errors
     if "error" in result:
-        st.error(f"Workflow error: {result['error']}")
+        st.error(f"❌ Workflow error: {result['error']}")
         st.session_state.workflow_status = "error"
         st.session_state.workflow_result = result
         return
@@ -328,24 +328,24 @@ def reset_database():
     st.session_state.workflow_result = {}
 
 # ──────────────────────────────────────────────────────────────
-#  HEALTH CHECK DISPLAY
+# ✅ HEALTH CHECK DISPLAY
 # ──────────────────────────────────────────────────────────────
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.success(" Agent ready — Groq API connected")
+    st.success("✅ Agent ready — Groq API connected")
 
 with col2:
     if SLACK_WEBHOOK_URL:
-        st.success(" Slack webhook configured")
+        st.success("✅ Slack webhook configured")
     else:
-        st.info(" Slack webhook not configured (optional)")
+        st.info("ℹ️ Slack webhook not configured (optional)")
 
 st.divider()
 
 # ──────────────────────────────────────────────────────────────
-#  TABS
+# ✅ TABS
 # ──────────────────────────────────────────────────────────────
 
 tab1, tab2, tab3, tab4 = st.tabs([
@@ -369,7 +369,7 @@ with tab1:
 
     with col_run:
         run_btn = st.button(
-            " Run AP Workflow",
+            "🚀 Run AP Workflow",
             type="primary",
             use_container_width=True
         )
