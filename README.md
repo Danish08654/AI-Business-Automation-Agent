@@ -36,40 +36,10 @@ Notification management
 
 ---
 
-#  Architecture
-
-
-┌─────────────────────────────────────────────┐
-│         Input Layer (REST API/Events)       │
-└────────────────┬────────────────────────────┘
-                 │
-┌─────────────────▼────────────────────────────┐
-│    Request Processing & Validation           │
-└────────────────┬────────────────────────────┘
-                 │
-┌─────────────────▼────────────────────────────┐
-│         AI Agent (Groq)                      │
-│   - Decision Making                          │
-│   - Logic Processing                         │
-│   - Data Analysis                            │
-└────────────────┬────────────────────────────┘
-                 │
-┌─────────────────▼────────────────────────────┐
-│     Workflow Engine & Orchestration          │
-└────────────────┬────────────────────────────┘
-                 │
-        ┌────────┼────────┐
-        │        │        │
-┌───────▼──┐ ┌───▼────┐ ┌─▼──────────┐
-│  Slack   │ │ APIs   │ │ Database   │
-│Integration│ │Client  │ │ Operations │
-└──────────┘ └────────┘ └────────────┘
-
----
 
 # License
 
-This project is licensed under the MIT License - see LICENSE file for details.
+This project is licensed under the MIT License.
 
 ----
 
