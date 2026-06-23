@@ -37,7 +37,7 @@ Notification management
 ---
 
 
-# Before (Without Your Agent):
+# Before (Without  Agent):
 
 ❌ Manual review of every invoice
 
@@ -49,7 +49,7 @@ Notification management
 
 ❌ Vendors complaining about late payments
 
-# After (With Your Agent):
+# After (With Agent):
 
 ✅ Instant processing (seconds)
 
