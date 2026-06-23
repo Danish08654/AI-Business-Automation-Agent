@@ -5,39 +5,39 @@ import json
 import os
 from dotenv import load_dotenv
 
-# ✅ LOAD ENVIRONMENT VARIABLES
+#  LOAD ENVIRONMENT VARIABLES
 load_dotenv()
 
-# ✅ GROQ API SETUP
+#  GROQ API SETUP
 try:
     from groq import Groq
     GROQ_API_KEY = os.getenv("GROQ_API_KEY")
     
     if not GROQ_API_KEY:
-        st.error("❌ GROQ_API_KEY not found! Add it to Streamlit Secrets.")
+        st.error(" GROQ_API_KEY not found! Add it to Streamlit Secrets.")
         st.stop()
     
     client = Groq(api_key=GROQ_API_KEY)
 except ImportError:
-    st.error("❌ groq module not installed. Add to requirements.txt: groq")
+    st.error(" groq module not installed. Add to requirements.txt: groq")
     st.stop()
 except Exception as e:
-    st.error(f"❌ Groq initialization error: {str(e)}")
+    st.error(f" Groq initialization error: {str(e)}")
     st.stop()
 
-# ✅ SLACK WEBHOOK (OPTIONAL)
+#  SLACK WEBHOOK (OPTIONAL)
 SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
 
-# ✅ STREAMLIT PAGE CONFIG
+#  STREAMLIT PAGE CONFIG
 st.set_page_config(
-    page_title="MCP AP Agent",
+    page_title="AI Business Agent",
     page_icon="🤖",
     layout="wide"
 )
 
-st.title("🤖 MCP Production Business Agent")
+st.title(" AI Business Agent")
 
-# ✅ INITIALIZE SESSION STATE (In-memory database)
+#  INITIALIZE SESSION STATE (In-memory database)
 if "invoices" not in st.session_state:
     st.session_state.invoices = [
         {
@@ -102,7 +102,7 @@ if "workflow_result" not in st.session_state:
     st.session_state.workflow_result = {}
 
 # ──────────────────────────────────────────────────────────────
-# ✅ GROQ AI AGENT FUNCTIONS
+#  GROQ AI AGENT FUNCTIONS
 # ──────────────────────────────────────────────────────────────
 
 def call_groq_agent(command: str, invoices: list) -> dict:
@@ -172,7 +172,7 @@ RESPOND ONLY with valid JSON in this exact format, no other text:
     
     except Exception as e:
         error_msg = str(e)
-        st.error(f"❌ Groq API Error: {error_msg}")
+        st.error(f" Groq API Error: {error_msg}")
         return {"error": error_msg}
 
 def send_slack_notification(message: str) -> bool:
@@ -202,17 +202,17 @@ def process_workflow(command: str):
     ]
     
     if not pending_invoices:
-        st.warning("⚠️ No pending invoices to process")
+        st.warning(" No pending invoices to process")
         st.session_state.workflow_status = "idle"
         return
     
     # Call Groq AI
-    with st.spinner("🤖 AI Agent analyzing invoices..."):
+    with st.spinner(" AI Agent analyzing invoices..."):
         result = call_groq_agent(command, pending_invoices)
     
     # Handle errors
     if "error" in result:
-        st.error(f"❌ Workflow error: {result['error']}")
+        st.error(f" Workflow error: {result['error']}")
         st.session_state.workflow_status = "error"
         st.session_state.workflow_result = result
         return
@@ -328,31 +328,31 @@ def reset_database():
     st.session_state.workflow_result = {}
 
 # ──────────────────────────────────────────────────────────────
-# ✅ HEALTH CHECK DISPLAY
+#  HEALTH CHECK DISPLAY
 # ──────────────────────────────────────────────────────────────
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.success("✅ Agent ready — Groq API connected")
+    st.success("Agent ready — Groq API connected")
 
 with col2:
     if SLACK_WEBHOOK_URL:
-        st.success("✅ Slack webhook configured")
+        st.success(" Slack webhook configured")
     else:
-        st.info("ℹ️ Slack webhook not configured (optional)")
+        st.info(" Slack webhook not configured (optional)")
 
 st.divider()
 
 # ──────────────────────────────────────────────────────────────
-# ✅ TABS
+#  TABS
 # ──────────────────────────────────────────────────────────────
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🚀 Run Workflow",
-    "📋 Invoices",
-    "📊 Dashboard",
-    "📜 Audit Log"
+    " Run Workflow",
+    " Invoices",
+    " Dashboard",
+    " Audit Log"
 ])
 
 # ── TAB 1: RUN WORKFLOW ───────────────────────────────────────
@@ -369,15 +369,15 @@ with tab1:
 
     with col_run:
         run_btn = st.button(
-            "🚀 Run AP Workflow",
+            " Run AP Workflow",
             type="primary",
             use_container_width=True
         )
 
     with col_reset:
-        if st.button("🔄 Reset Database", use_container_width=True):
+        if st.button(" Reset Database", use_container_width=True):
             reset_database()
-            st.success("✅ Database reset — 5 fresh invoices added")
+            st.success(" Database reset — 5 fresh invoices added")
             st.rerun()
 
     if run_btn:
@@ -385,51 +385,51 @@ with tab1:
             process_workflow(command)
             st.rerun()
         else:
-            st.warning("⚠️ Please enter a workflow command")
+            st.warning(" Please enter a workflow command")
 
     st.divider()
 
     # Workflow status display
     st.subheader("Workflow Status")
 
-    if st.button("🔄 Check Status", use_container_width=True):
+    if st.button(" Check Status", use_container_width=True):
         st.rerun()
 
     wf_status = st.session_state.workflow_status
 
     if wf_status == "running":
-        st.warning("⏳ Workflow running — please wait...")
+        st.warning(" Workflow running — please wait...")
         st.progress(0.5)
 
     elif wf_status == "completed":
         result = st.session_state.workflow_result
-        st.success("✅ Workflow completed successfully")
+        st.success(" Workflow completed successfully")
 
         c1, c2, c3, c4 = st.columns(4)
         with c1:
-            st.metric("✅ Approved", result.get("approved_count", 0))
+            st.metric(" Approved", result.get("approved_count", 0))
         with c2:
-            st.metric("❌ Rejected", result.get("rejected_count", 0))
+            st.metric(" Rejected", result.get("rejected_count", 0))
         with c3:
-            st.metric("⚠️ For Review", result.get("review_count", 0))
+            st.metric(" For Review", result.get("review_count", 0))
         with c4:
-            st.metric("📨 Notified", result.get("notifications_sent", 0))
+            st.metric(" Notified", result.get("notifications_sent", 0))
 
         if result.get("final_report"):
             st.subheader("Agent Final Report")
             st.markdown(result["final_report"])
 
         if result.get("workflow_log"):
-            with st.expander("🔍 Workflow Log"):
+            with st.expander(" Workflow Log"):
                 for entry in result["workflow_log"]:
                     st.text(f"• {entry}")
 
     elif wf_status == "error":
         result = st.session_state.workflow_result
-        st.error(f"❌ Workflow error: {result.get('error', 'Unknown error')}")
+        st.error(f" Workflow error: {result.get('error', 'Unknown error')}")
 
     else:
-        st.info("ℹ️ Agent is idle. Click 'Run AP Workflow' to start processing invoices.")
+        st.info("Agent is idle. Click 'Run AP Workflow' to start processing invoices.")
 
 
 # ── TAB 2: INVOICES ───────────────────────────────────────────
@@ -441,7 +441,7 @@ with tab2:
         ["all", "pending", "approved", "rejected", "under_review"]
     )
 
-    if st.button("🔄 Refresh Invoices", use_container_width=True):
+    if st.button(" Refresh Invoices", use_container_width=True):
         st.rerun()
 
     # Filter invoices based on selection
