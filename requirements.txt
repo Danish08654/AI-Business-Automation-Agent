@@ -1,0 +1,16 @@
+langgraph
+langchain
+langchain-groq
+langchain-core
+langchain-mcp-adapters
+mcp
+fastmcp
+fastapi
+uvicorn
+pydantic
+python-dotenv
+requests
+streamlit
+plotly
+pandas
+httpx
