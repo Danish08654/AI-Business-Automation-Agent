@@ -116,7 +116,7 @@ async def run_ap_workflow(command: str = "Process all pending invoices"):
         # LLM WITH TOOLS
         # =================================================
         llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-20b",
             temperature=0.1,
             api_key=os.getenv("GROQ_API_KEY")
         ).bind_tools(tools)
